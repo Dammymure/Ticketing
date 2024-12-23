@@ -2,18 +2,12 @@ import { PageHeader } from "../../../_components/PageHeader";
 import { EventForm } from "../../_components/EventForm";
 import db from "@/db/db";
 
-// interface PageProps {
-//     params: Promise<{ id: string }> & {
-//         then: Promise<{ id: string }>['then'];
-//         catch: Promise<{ id: string }>['catch'];
-//         finally: Promise<{ id: string }>['finally'];
-//         [Symbol.toStringTag]: string;
-//     };
-// }
-
 interface PageProps {
-    params: {
-        id: string;
+    params: Promise<{ id: string }> & {
+        then: Promise<{ id: string }>['then'];
+        catch: Promise<{ id: string }>['catch'];
+        finally: Promise<{ id: string }>['finally'];
+        [Symbol.toStringTag]: string;
     };
 }
 
@@ -32,7 +26,9 @@ interface Event {
 }
 
 export default async function EditProductPage({ params }: PageProps) {
-    const { id } = params;
+    const resolvedParams = await params; // Await the params if it's a Promise
+    const { id } = resolvedParams;
+
     const event: Event | null = await db.event.findUnique({ where: { id } });
 
     if (!event) {

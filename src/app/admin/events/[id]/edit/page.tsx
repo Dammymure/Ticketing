@@ -3,10 +3,9 @@ import { EventForm } from "../../_components/EventForm";
 import db from "@/db/db";
 
 interface EditProductPageProps {
-    params: {
-        id: string;
-    };
+    params: Promise<{ id: string }>;
 }
+
 
 export default async function EditProductPage({ params }: EditProductPageProps) {
     const event = await db.event.findUnique({ where: { id: params.id } });

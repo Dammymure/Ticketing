@@ -25,6 +25,8 @@
 //         </>
 //     );
 // }
-export function Page() {
-        return 'name';
+
+
+    export default function EditEventPage(){
+        return <h1>Hello</h1>
     }

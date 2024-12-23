@@ -25,6 +25,6 @@
 //         </>
 //     );
 // }
-export function App() {
+export function Page() {
         return 'name';
     }

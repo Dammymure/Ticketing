@@ -2,19 +2,16 @@ import db from "@/db/db";
 import { PageHeader } from "../../../_components/PageHeader";
 import { EventForm } from "../../_components/EventForm";
 
-interface PageProps {
-    params: {
-        then: string;
-        catch: string;
-        finally: string;
-        [Symbol.toStringTag]: string;
+type EditEventPageProps = {
+    params:{
         id: string;
-    };
+    }
+       
 }
 
-export default async function EditEventPage({ params }: PageProps) {
-    const { id } = params;
+export default async function EditEventPage({ params }: EditEventPageProps) {
 
+    const { id } = params;
     const event = await db.event.findUnique({ where: { id } });
 
     if (!event) {

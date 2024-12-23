@@ -1,12 +1,24 @@
-import db from "@/db/db";
 import { PageHeader } from "../../../_components/PageHeader";
 import { EventForm } from "../../_components/EventForm";
+import db from "@/db/db";
 
+interface EditProductPageProps {
+    params: {
+        id: string;
+    };
+}
 
-export default async function EditProductPage({ params }: { params: { id: string } }){
+export default async function EditProductPage({ params }: EditProductPageProps) {
     const event = await db.event.findUnique({ where: { id: params.id } });
-    return( <>
-    <PageHeader>Edit Event</PageHeader>
-    <EventForm event={event}/>
-    </>)
+
+    if (!event) {
+        return <div>Event not found</div>; // Handle case where event is not found
+    }
+
+    return (
+        <>
+            <PageHeader>Edit Event</PageHeader>
+            <EventForm event={event} />
+        </>
+    );
 }

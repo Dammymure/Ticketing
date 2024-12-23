@@ -25,3 +25,6 @@
 //         </>
 //     );
 // }
+export function App() {
+        return 'name';
+    }

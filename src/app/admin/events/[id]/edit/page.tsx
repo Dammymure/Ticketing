@@ -2,13 +2,13 @@ import { PageHeader } from "../../../_components/PageHeader";
 import { EventForm } from "../../_components/EventForm";
 import db from "@/db/db";
 
+interface PageProps {
+    params: Promise<{ id: string }>;
+}
 
-export type paramsType = Promise<{ id: string }>;
-
-
-export default async function EditProductPage(props: { params: paramsType }) {
-    const { id } = await props.params;
-
+export default async function EditProductPage({ params }: PageProps) {
+    const resolvedParams = await params; // Await the params if it's a Promise
+    const { id } = resolvedParams;
 
     const event = await db.event.findUnique({ where: { id } });
 

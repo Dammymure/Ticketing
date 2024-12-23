@@ -3,7 +3,12 @@ import { EventForm } from "../../_components/EventForm";
 import db from "@/db/db";
 
 interface PageProps {
-    params: Promise<{ id: string }>;
+    params: Promise<{ id: string }> & {
+        then: Promise<{ id: string }>['then'];
+        catch: Promise<{ id: string }>['catch'];
+        finally: Promise<{ id: string }>['finally'];
+        [Symbol.toStringTag]: string;
+    };
 }
 
 export default async function EditProductPage({ params }: PageProps) {

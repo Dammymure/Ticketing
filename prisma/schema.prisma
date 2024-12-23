@@ -1,0 +1,52 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  number    Int      @unique
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  events    Event[]  @relation("UserEvents") // Many-to-many relation
+}
+
+model Client {
+  id     String  @id @default(uuid())
+  name   String
+  email     String   @unique
+  events Event[]
+}
+
+model Event {
+  id                  String                 @id @default(uuid())
+  title               String
+  date                DateTime
+  pricePaidInCents    Int
+  clientId            String
+  client              Client                 @relation(fields: [clientId], references: [id], onDelete: Cascade)
+
+  users               User[]                 @relation("UserEvents") // Many-to-many relation
+
+  isAvailableForPurchase  Boolean            @default(true)
+  NumberOfTickets     Int
+  imagePath           String
+  description         String
+  createdAt           DateTime               @default(now())
+  updatedAt           DateTime               @updatedAt
+  TicketVerifications TicketVerification[]
+}
+
+model TicketVerification {
+  id        String   @id @default(uuid())
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+}

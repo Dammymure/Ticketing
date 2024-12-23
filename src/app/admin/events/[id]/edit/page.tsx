@@ -1,3 +1,4 @@
+"use client"
 import { PageHeader } from "../../../_components/PageHeader";
 import { EventForm } from "../../_components/EventForm";
 import db from "@/db/db";

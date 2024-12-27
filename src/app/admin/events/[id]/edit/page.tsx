@@ -11,11 +11,10 @@ import { useParams } from 'next/navigation'
 //     }
 // }
 
-export default async function EditEventPage() {
-    const params = useParams<{ slug: string; }>()
+export default async function EditEventPage({ params}: any) {
+    const { id } = params;
 
-
-    const event = await db.event.findUnique({ where: { id: params.slug } });
+    const event = await db.event.findUnique({ where: { id } });
 
     if (!event) {
         return <div>Event not found</div>; // Handle case where event is not found

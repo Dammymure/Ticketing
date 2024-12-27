@@ -1,35 +1,22 @@
 import Link from "next/link"
 import { PageHeader } from "./_components/PageHeader"
-import db from "@/db/db"
+// import db from "@/db/db"
 import { formatCurrency, formatNumber } from "@/lib/formatters"
+import { PrismaClient } from '@prisma/client'
 
-
-// async function getSalesData(){
-//     // const data = await db.event.aggregate({
-//     //     _sum: {pricePaidInCents: true},
-//     //     _count: true
-//     // })
-
-//     // return  {
-//     //     amount: (data._sum.pricePaidInCents || 0) / 100,
-//     //     numberOfSales: data._count
-//     // }
-
-//     const data = await db.ticketVerification.findUnique({
-//         where: { event: true}
-//     })
-// }
+const prisma = new PrismaClient()
+// use `prisma` in your application to read and write data in your DB
 
 async function getClientData(){
     const [allClients] = await Promise.all([
-        db.client.count(),
+        prisma.client.count(),
     ])
     return allClients
 }
 
 async function getSalesData() {
     const [ticketVerifications, userCount] = await Promise.all([
-        db.ticketVerification.findMany({
+        prisma.ticketVerification.findMany({
             include: {
                 event: {
                     select: {
@@ -38,7 +25,7 @@ async function getSalesData() {
                 },
             },
         }),
-        db.user.count(),
+        prisma.user.count(),
     ]);
 
     const totalAmount = ticketVerifications.reduce((sum, ticket) => sum + (ticket.event?.pricePaidInCents || 0), 0);
@@ -53,8 +40,8 @@ async function getSalesData() {
 
 async function getUserData() {
     const [userCount, eventData] = await Promise.all([
-        db.user.count(),
-        db.event.aggregate({
+        prisma.user.count(),
+        prisma.event.aggregate({
             _sum: { pricePaidInCents: true}
         }),
     ])
@@ -67,8 +54,8 @@ async function getUserData() {
 async function getEventData(){
     const [activeCount, inactiveCount] = await Promise.all([
         
-        db.event.count({where: {isAvailableForPurchase: true}}),
-        db.event.count({where: {isAvailableForPurchase: false}})
+        prisma.event.count({where: {isAvailableForPurchase: true}}),
+        prisma.event.count({where: {isAvailableForPurchase: false}})
     ])
     return { activeCount, inactiveCount }
 }

@@ -1,12 +1,15 @@
 import { Button } from "@/components/ui/button";
 import { PageHeader } from "../_components/PageHeader";
-import db from "@/db/db";
+// import db from "@/db/db";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { formatNumber } from "@/lib/formatters";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { MoreVertical } from "lucide-react";
 import { ActiveToggleDropdownItem } from "../events/_components/EventActions";
 import Link from "next/link";
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 export default function ClientPage(){
     return <>
@@ -21,7 +24,7 @@ export default function ClientPage(){
 }
 
 async function ClientTable(){
-    const clients = await db.client.findMany({
+    const clients = await prisma.client.findMany({
         select:{
             id: true,
             email:true,

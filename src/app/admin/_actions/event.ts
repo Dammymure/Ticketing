@@ -1,10 +1,13 @@
 "use server"
 
-import db from "@/db/db";
+// import db from "@/db/db";
 import fs from "fs/promises";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
 import { z } from "zod";
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 
@@ -39,12 +42,12 @@ export async function addEvent(prevState: unknown, formData: FormData) {
     const imagePath = `/events/${crypto.randomUUID()}-${data.image.name}`;
     await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
 
-    let client = await db.client.findUnique({
+    let client = await prisma.client.findUnique({
         where: { email: data.clientEmail },
     });
 
     if (!client) {
-        client = await db.client.create({
+        client = await prisma.client.create({
             data: {
                 name: data.clientName,
                 email: data.clientEmail,
@@ -55,7 +58,7 @@ export async function addEvent(prevState: unknown, formData: FormData) {
     console.log("Client:", client);
 
     // Create the event using the client ID
-    const event = await db.event.create({
+    const event = await prisma.event.create({
         data: {
             isAvailableForPurchase: false,
             title: data.title,
@@ -89,9 +92,9 @@ export async function updateEvent(id: string, prevState: unknown, formData: Form
 
     const data = result.data 
     console.log("Parsed Data:", data);
-    const event = await db.event.findUnique({ where: {id}})
+    const event = await prisma.event.findUnique({ where: {id}})
     const clientId = event?.clientId
-    const client = await db.client.findUnique({ where: {id: clientId}})
+    const client = await prisma.client.findUnique({ where: {id: clientId}})
 
     if(event == null) return notFound()
 
@@ -103,7 +106,7 @@ export async function updateEvent(id: string, prevState: unknown, formData: Form
     }
 
     // Create the event using the client ID
-    await db.event.update({
+    await prisma.event.update({
         where: {id},
         data:{
             isAvailableForPurchase: false,
@@ -124,7 +127,7 @@ export async function updateEvent(id: string, prevState: unknown, formData: Form
 }
 
 export async function getClientData(id: string) {
-    const client = await db.client.findUnique({ where: { id } });
+    const client = await prisma.client.findUnique({ where: { id } });
     if (!client) return notFound();
     return client;
 }
@@ -135,7 +138,7 @@ export async function getClientData(id: string) {
 export async function toggleEventAvailability(
     id: string, 
     isAvailableForPurchase: boolean){
-    await db.event.update({where: { id }, data: { isAvailableForPurchase}})
+    await prisma.event.update({where: { id }, data: { isAvailableForPurchase}})
 
 
     // revalidatePath("/")
@@ -143,7 +146,7 @@ export async function toggleEventAvailability(
 }
 
 export async function deleteEvent(id: string){
-    const event = await db.event.delete({ where: {id} })
+    const event = await prisma.event.delete({ where: {id} })
     if (event == null) return notFound()
 
     await fs.unlink(`public${event.imagePath}`)

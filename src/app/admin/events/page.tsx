@@ -2,11 +2,14 @@ import { Button } from "@/components/ui/button";
 import { PageHeader } from "../_components/PageHeader";
 import Link from "next/link";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import db from "@/db/db";
+// import db from "@/db/db";
 import { CheckCircle2, MoreVertical, XCircle } from "lucide-react";
 import { formatCurrency, formatNumber } from "@/lib/formatters";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { ActiveToggleDropdownItem, DeleteDropdownItem, redirect } from "./_components/EventActions";
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 // import { redirect } from "next/navigation";
 // import { ActiveToggleDropdownItem, DeleteDropdownItem } from "./_components/ProductActions";
 
@@ -23,7 +26,7 @@ export default function AdminEventPage(){
 }
 
 async function EventTable(){
-    const events = await db.event.findMany({
+    const events = await prisma.event.findMany({
         select:{
             id: true,
             title: true,

@@ -1,9 +1,12 @@
 'use client'
-import db from "@/db/db";
+// import db from "@/db/db";
 import { PageHeader } from "../../_components/PageHeader";
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { useParams } from "next/navigation";
+import { PrismaClient } from '@prisma/client'
+
+const prisma = new PrismaClient()
 
 const dummyData = [
     {
@@ -32,7 +35,7 @@ const dummyData = [
 export default async function EventInfo(){
     const { id } = useParams() as { id: any };
 
-    const event = await db.event.findUnique({ where: { id }, 
+    const event = await prisma.event.findUnique({ where: { id }, 
         select:{
             title: true,
             date: true,

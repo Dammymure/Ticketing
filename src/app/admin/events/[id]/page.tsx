@@ -1,7 +1,9 @@
+'use client'
 import db from "@/db/db";
 import { PageHeader } from "../../_components/PageHeader";
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import { useParams } from "next/navigation";
 
 const dummyData = [
     {
@@ -26,14 +28,9 @@ const dummyData = [
     }
 ];
 
-interface PageProps {
-    params: {
-        id: string;
-    };
-}
 
-export default async function EventInfo({ params }: PageProps){
-    const { id } = params;
+export default async function EventInfo(){
+    const { id } = useParams() as { id: any };
 
     const event = await db.event.findUnique({ where: { id }, 
         select:{

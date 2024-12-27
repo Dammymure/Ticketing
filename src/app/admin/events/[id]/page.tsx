@@ -26,9 +26,16 @@ const dummyData = [
     }
 ];
 
-export default async function EventInfo({ params }: { params: { id: string } }){
+interface PageProps {
+    params: {
+        id: string;
+    };
+}
 
-    const event = await db.event.findUnique({ where: { id: params.id }, 
+export default async function EventInfo({ params }: PageProps){
+    const { id } = params;
+
+    const event = await db.event.findUnique({ where: { id }, 
         select:{
             title: true,
             date: true,

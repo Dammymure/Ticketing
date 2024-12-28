@@ -37,27 +37,10 @@ export async function addEvent(prevState: unknown, formData: FormData) {
     const data = result.data;
     console.log("Parsed Data:", data);
 
-    // // create public folder to hold event images
+    // create public folder to hold event images
     // await fs.mkdir("public/events", { recursive: true });
-    // const imagePath = `/events/${crypto.randomUUID()}-${data.image.name}`;
-    // await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
-
-        // Ensure the public/events directory exists
-        const publicDir = "public/events";
-        try {
-            await fs.mkdir(publicDir, { recursive: true });
-        } catch (error) {
-            console.error(`Error creating directory ${publicDir}:`, error);
-            throw new Error(`Failed to create directory ${publicDir}`);
-        }
-    
-        const imagePath = `/events/${crypto.randomUUID()}-${data.image.name}`;
-        try {
-            await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
-        } catch (error) {
-            console.error(`Error writing file ${imagePath}:`, error);
-            throw new Error(`Failed to write file ${imagePath}`);
-        }
+    const imagePath = `/events/${crypto.randomUUID()}-${data.image.name}`;
+    await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
 
     let client = await prisma.client.findUnique({
         where: { email: data.clientEmail },

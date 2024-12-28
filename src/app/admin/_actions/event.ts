@@ -2,12 +2,12 @@
 
 // import db from "@/db/db";
 import fs from "fs/promises";
+import { PrismaClient } from "@prisma/client";
+import { z } from "zod";
 import { revalidatePath } from "next/cache";
 import { notFound, redirect } from "next/navigation";
-import { z } from "zod";
-import { PrismaClient } from '@prisma/client'
 
-const prisma = new PrismaClient()
+const prisma = new PrismaClient();
 
 const fileSchema = z.instanceof(File, { message: "Required" });
 
@@ -21,7 +21,7 @@ const addSchema = z.object({
     date: z.string().refine(val => !isNaN(Date.parse(val)), { message: "Invalid date" }).transform(val => new Date(val)),
     pricePaidInCents: z.coerce.number().int().min(1),
     NumberOfTickets: z.coerce.number().int().min(1),
-    image: imageSchema.refine(file => file.size > 0, "")
+    image: z.optional(imageSchema.refine(file => file.size > 0, ""))
 });
 
 export async function addEvent(prevState: unknown, formData: FormData) {
@@ -37,10 +37,25 @@ export async function addEvent(prevState: unknown, formData: FormData) {
     const data = result.data;
     console.log("Parsed Data:", data);
 
-    // create public folder to hold event images
-    // await fs.mkdir("public/events", { recursive: true });
-    const imagePath = `/events/${crypto.randomUUID()}-${data.image.name}`;
-    await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
+    let imagePath = null;
+    if (data.image) {
+        // Ensure the public/events directory exists
+        const publicDir = "public/events";
+        try {
+            await fs.mkdir(publicDir, { recursive: true });
+        } catch (error) {
+            console.error(`Error creating directory ${publicDir}:`, error);
+            throw new Error(`Failed to create directory ${publicDir}`);
+        }
+
+        imagePath = `/events/${crypto.randomUUID()}-${data.image.name}`;
+        try {
+            await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
+        } catch (error) {
+            console.error(`Error writing file ${imagePath}:`, error);
+            throw new Error(`Failed to write file ${imagePath}`);
+        }
+    }
 
     let client = await prisma.client.findUnique({
         where: { email: data.clientEmail },
@@ -54,7 +69,6 @@ export async function addEvent(prevState: unknown, formData: FormData) {
             }
         });
     }
-
     console.log("Client:", client);
 
     // Create the event using the client ID
@@ -66,13 +80,15 @@ export async function addEvent(prevState: unknown, formData: FormData) {
             pricePaidInCents: data.pricePaidInCents,
             clientId: client.id,
             NumberOfTickets: data.NumberOfTickets,
-            imagePath,
+            imagePath: imagePath ?? "",
             description: data.description,
         },
     });
 
     console.log("Event:", event);
+    
 
+    
     revalidatePath("/");
     revalidatePath("/events");
     redirect("/admin/events");

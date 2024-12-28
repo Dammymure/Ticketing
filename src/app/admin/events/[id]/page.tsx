@@ -32,13 +32,12 @@ const dummyData = [
 ];
 
 
-interface EventInfoProps {
-    params: Promise<{ id: string }> | { id: any};
-}
+// interface EventInfoProps {
+//     params: Promise<{ id: string }> | { id: any};
+// }
 
-export default async function EventInfo({ params}: EventInfoProps) {
-    const resolvedParams = await params; // Await the params if it's a Promise
-    const { id } = resolvedParams;
+export default async function EventInfo({ params }: { params: Promise<{ id: string }> }) {
+    const id = (await params).id;
 
     const event = await prisma.event.findUnique({ where: { id }, 
         select:{

@@ -129,7 +129,7 @@ export function EventForm({ event }: { event?: Event | null}){
 
         <div className="space-y-2">
             <Label htmlFor="image">Image</Label>
-            <Input type="file" id="image" name="image" required={event == null}/>
+            <Input type="file" id="image" name="image" required={false}/>
             {event != null && (
                 <Image
                 src={event?.imagePath}

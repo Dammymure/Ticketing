@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 // import db from "@/db/db";
 import { PageHeader } from "../../_components/PageHeader";
 import Image from "next/image";

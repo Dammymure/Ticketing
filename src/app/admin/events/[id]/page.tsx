@@ -3,7 +3,7 @@
 import { PageHeader } from "../../_components/PageHeader";
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { useParams } from "next/navigation";
+// import { useParams } from "next/navigation";
 import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
@@ -32,8 +32,13 @@ const dummyData = [
 ];
 
 
-export default async function EventInfo(){
-    const { id } = useParams() as { id: any };
+interface EventInfoProps {
+    params: {
+        id: string;
+    };
+}
+
+export default async function EventInfo({ params: { id } }: EventInfoProps) {
 
     const event = await prisma.event.findUnique({ where: { id }, 
         select:{

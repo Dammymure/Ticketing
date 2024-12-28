@@ -127,7 +127,7 @@ export function EventForm({ event }: { event?: Event | null}){
 
         </div>
 
-        <div className="space-y-2">
+        {/* <div className="space-y-2">
             <Label htmlFor="image">Image</Label>
             <Input type="file" id="image" name="image" required={false}/>
             {event != null && (
@@ -139,7 +139,7 @@ export function EventForm({ event }: { event?: Event | null}){
                 />
             )}
             {error?.image && <div className="text-destructive">{error.image}</div>}
-        </div>
+        </div> */}
 
         <SubmitButton/>
     </form>)

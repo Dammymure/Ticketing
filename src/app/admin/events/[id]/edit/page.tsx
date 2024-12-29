@@ -1,4 +1,3 @@
-'use client'
 // import db from "@/db/db";
 import { PageHeader } from "../../../_components/PageHeader";
 import { EventForm } from "../../_components/EventForm";
@@ -14,8 +13,8 @@ const prisma = new PrismaClient()
 //     }
 // }
 
-export default async function EditEventPage({ params}: any) {
-    const { id } = params;
+export default async function EditEventPage({ params }: { params: Promise<{ id: string }> }) {
+    const id = (await params).id;
 
     const event = await prisma.event.findUnique({ where: { id } });
 

@@ -1,5 +1,3 @@
-// 'use client'
-// import db from "@/db/db";
 import { PageHeader } from "../../_components/PageHeader";
 import Image from "next/image";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";

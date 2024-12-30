@@ -18,7 +18,7 @@ export function EventCard({id, title, imagePath, pricePaidInCents, description}:
             <div className="relative w-full h-auto aspect-video">
                 <Image src={imagePath} fill alt={title}/>
             </div>
-            <CardHeader>
+            <CardHeader>   
                 <CardTitle>{title}</CardTitle>
                 <CardDescription>{formatCurrency(pricePaidInCents / 100)}</CardDescription>
             </CardHeader>

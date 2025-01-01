@@ -4,10 +4,13 @@ import { findUserFromEvent } from "@/app/(customerFacing)/actions/purchased"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { formatCurrency } from "@/lib/formatters"
+import { PrismaClient } from "@prisma/client"
 import { Elements, LinkAuthenticationElement, PaymentElement, useElements, useStripe } from "@stripe/react-stripe-js"
 import { loadStripe } from "@stripe/stripe-js"
 import Image from "next/image"
 import { FormEvent, useState } from "react"
+
+const prisma = new PrismaClient();
 
 
 type CheckoutFormProps = {
@@ -54,7 +57,7 @@ export function CheckoutForm({ event, clientSecret}: CheckoutFormProps){
     )
 }
 
-function Form({ pricePaidInCents, eventId} : { pricePaidInCents: number, eventId: string}) {
+async function Form({ pricePaidInCents, eventId} : { pricePaidInCents: number, eventId: string}) {
     const stripe = useStripe()
     const elements = useElements()
     const [isLoading, setIsLoading] = useState(false)
@@ -85,6 +88,13 @@ function Form({ pricePaidInCents, eventId} : { pricePaidInCents: number, eventId
             }
         }).finally(() => setIsLoading(false))
 
+    }
+
+    if (email) {
+        const user = await prisma.user.findUnique({ where: { email }})
+        if(user == null){
+            await prisma.user.create({ data: { email }})
+        }
     }
 
     return (<form onSubmit={handleSubmit}>

@@ -64,6 +64,10 @@ export default async function SuccessPage({searchParams}:{ searchParams: Promise
         className=""/>
         </div>
         <div>
+            <p>Passcode:</p>
+            <p className="font-semibold">{ticketId}</p>
+        </div>
+        <div>
             <div className="text-lg">
                 {formatCurrency(event.pricePaidInCents / 100)}
             </div>

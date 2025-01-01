@@ -34,10 +34,8 @@ export async function POST(req: NextRequest){
             event: { create: { eventId, pricePaidInCents }}
         };
 
-        const user = await prisma.user.upsert({
-            where: { email },
-            create: userFields,
-            update: userFields,
+        const user = await prisma.user.create({
+            data: userFields,
             select: { events: { orderBy: { createdAt: "desc" }, take: 1 }, id: true },
         });
     

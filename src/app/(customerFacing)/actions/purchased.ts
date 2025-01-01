@@ -23,5 +23,5 @@ export async function findUserFromEvent(eventId: string, email: string) {
         },
     });
 
-    return (event?.users.find((user) => user.id === userId)) != null;
+    return (event?.users.find((user) => user.id === user.id)) != null;
 }

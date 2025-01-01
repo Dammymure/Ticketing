@@ -12,9 +12,11 @@ const prisma = new PrismaClient();
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string)
 
-export default async function SuccessPage({searchParams}:{ searchParams:{ payment_intent: string}}){ 
+export default async function SuccessPage({searchParams}:{ searchParams: Promise<{ payment_intent: string}>}){ 
+    const payment_intent = (await searchParams).payment_intent;
 
-    const paymentIntent = await stripe.paymentIntents.retrieve(searchParams.payment_intent)
+
+    const paymentIntent = await stripe.paymentIntents.retrieve(payment_intent)
 
     if (paymentIntent.metadata.eventId == null) return notFound()
         

@@ -20,11 +20,10 @@ datasource db {
 model User {
   id        String   @id @default(uuid())
   email     String   @unique
-  number    Int      @unique
-  name      String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   events    Event[]  @relation("UserEvents") // Many-to-many relation
+  TicketVerification TicketVerification[]
 }
 
 model Client {
@@ -55,8 +54,11 @@ model Event {
 
 model TicketVerification {
   id        String   @id @default(uuid())
+  ticketId  String
   expiresAt DateTime
   createdAt DateTime @default(now())
   eventId   String
   event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  userId    String?
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

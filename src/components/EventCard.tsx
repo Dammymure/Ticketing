@@ -13,6 +13,8 @@ type EventCardProps = {
 }
 
 export function EventCard({id, title, imagePath, pricePaidInCents, description}: EventCardProps) {
+    console.log(imagePath);
+    
     return (
         <Card className="flex overflow-hidden flex-col">
             <div className="relative w-full h-auto aspect-video">
@@ -27,7 +29,7 @@ export function EventCard({id, title, imagePath, pricePaidInCents, description}:
             </CardContent>
             <CardFooter>
                 <Button asChild size="lg" className="w-full">
-                    <Link href={`/products/${id}/purchase`}>Purchase</Link>
+                    <Link href={`/events/${id}/purchase`}>Purchase</Link>
                 </Button>
             </CardFooter>
 

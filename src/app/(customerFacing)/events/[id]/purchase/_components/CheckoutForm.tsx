@@ -28,10 +28,10 @@ export function CheckoutForm({ event, clientSecret}: CheckoutFormProps){
         <div className="max-w-5xl w-full mx-auto space-y-8">
             <div className="flex gap-4 items-center">
                 <div className="aspect-video flex-shrink-0 w-1/3 relative">
-                {/* <Image 
-                src={event.imagePath} 
-                fill alt={event.name} 
-                className="object-cover"/> */}
+                <Image 
+                src={`/events/${event.id}.jpeg`} 
+                fill alt={event.title} 
+                className="object-cover"/>
                 <h1>{event.title}</h1>
                 </div>
                 <div>

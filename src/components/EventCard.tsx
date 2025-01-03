@@ -28,7 +28,7 @@ export function EventCard({id, title, imagePath, pricePaidInCents, description}:
                 <p className="line-clamp-4">{description}</p>
             </CardContent>
             <CardFooter>
-                <Button asChild size="lg" className="w-full">
+                <Button asChild size="lg" className="w-full bg-blue-600">
                     <Link href={`/events/${id}/purchase`}>Purchase</Link>
                 </Button>
             </CardFooter>

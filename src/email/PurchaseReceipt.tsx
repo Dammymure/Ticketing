@@ -17,7 +17,7 @@ export default function PurchaseReceiptEmail({ event, downloadVerificationId }: 
 
     return (
         <Html>
-            <Preview>View {event.title} receipt</Preview>
+            <Preview>View {event?.title} receipt</Preview>
             <Tailwind>
                 <Head/>
                 <Body className="font-sans bg-white">
